@@ -66,5 +66,5 @@ module.exports = {
   calculateCost,
   calculateTradeCost,
   getPrice,
-}; 
+};
 

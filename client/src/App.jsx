@@ -6,6 +6,7 @@ import { MarketPage } from "./pages/MarketPage";
 import { DashboardPage } from "./pages/DashboardPage";
 import { AdminPage } from "./pages/AdminPage";
 import { AuthCallback } from "./pages/AuthCallback";
+import { AnalyticsPage } from "./pages/AnalyticsPage";
 import Dither from "./components/ui/Dither";
 import Noise from "./components/ui/Noise";
 
@@ -40,6 +41,7 @@ function App() {
           <Routes>
             <Route path="/" element={<Home />} />
             <Route path="/markets/:id" element={<MarketPage />} />
+            <Route path="/markets/:id/analytics" element={<AnalyticsPage />} />
             <Route path="/dashboard" element={<DashboardPage />} />
             <Route path="/admin" element={<AdminPage />} />
             <Route path="/auth/callback" element={<AuthCallback />} />
