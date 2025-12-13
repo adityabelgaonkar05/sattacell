@@ -33,13 +33,13 @@ export function useAuth() {
       setLoading(true);
       setError(null);
       const data = await exchangeCodeForToken(code);
-      
+
       if (data.success && data.token) {
         localStorage.setItem('auth_token', data.token);
         setToken(data.token);
         setUserData(data.user);
         setUser({ email: data.user.email });
-        
+
         // Clean up URL
         window.history.replaceState({}, document.title, window.location.pathname);
       } else if (data.error) {
@@ -83,6 +83,8 @@ export function useAuth() {
     setToken(null);
     setUser(null);
     setUserData(null);
+    // Redirect to home/landing page
+    window.location.href = '/';
   };
 
   return {
