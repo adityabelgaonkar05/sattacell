@@ -67,6 +67,17 @@ export function useAuth() {
     }
   };
 
+  const refetchUserData = async () => {
+    if (!token) return;
+    try {
+      const data = await api.get('/auth/me');
+      setUserData(data.user);
+      setUser({ email: data.user.email });
+    } catch (error) {
+      console.error('Failed to refresh user data:', error);
+    }
+  };
+
   const signIn = async () => {
     try {
       const authUrl = await getGoogleAuthUrl();
@@ -95,5 +106,6 @@ export function useAuth() {
     signOut,
     isAuthenticated: !!token && !!userData,
     error,
+    refetchUserData,
   };
 }

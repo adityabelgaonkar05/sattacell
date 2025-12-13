@@ -20,7 +20,7 @@ import {
 } from "lucide-react";
 
 export function TradePanel({ marketId }) {
-  const { isAuthenticated, userData } = useAuth();
+  const { isAuthenticated, userData, refetchUserData } = useAuth();
   const { market, loading, refetch: refetchMarket } = useMarket(marketId);
   const [selectedOutcome, setSelectedOutcome] = useState(0);
   const [shares, setShares] = useState("");
@@ -82,9 +82,14 @@ export function TradePanel({ marketId }) {
 
       setShares("");
       setSuccess(`Successfully ${tradeType === 'buy' ? 'bought' : 'sold'} ${shares} shares!`);
+      
+      // Refresh market data (includes userPosition)
       await refetchMarket();
+      
+      // Refresh user data (includes balance)
+      await refetchUserData();
 
-      // Dispatch event to refresh the probability chart
+      // Dispatch event to refresh other components (portfolio, charts, etc.)
       window.dispatchEvent(new CustomEvent('tradeCompleted'));
 
       // Clear success after 3 seconds

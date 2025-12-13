@@ -1,3 +1,4 @@
+import { useState } from "react";
 import { MarketList } from "@/components/markets/MarketList";
 import { LoginButton } from "@/components/auth/LoginButton";
 import { useAuth } from "@/hooks/useAuth";
@@ -9,6 +10,7 @@ import { LandingPage } from "@/pages/LandingPage";
 
 export function Home() {
   const { isAuthenticated, userData } = useAuth();
+  const [activeView, setActiveView] = useState("markets"); // Default to markets
 
   if (!isAuthenticated) {
     return <LandingPage />;
@@ -69,7 +71,23 @@ export function Home() {
           <span className="text-primary">予測市場</span>
           <span>PN: 2483-AX9</span>
           <span className="text-primary/50">|</span>
-          <span>ACTIVE PROTOCOL</span>
+          <button
+            onClick={() => setActiveView("markets")}
+            className={`cursor-pointer hover:text-primary transition-colors ${
+              activeView === "markets" ? "text-primary" : ""
+            }`}
+          >
+            ACTIVE PROTOCOL
+          </button>
+          <span className="text-primary/50">|</span>
+          <button
+            onClick={() => setActiveView("teams")}
+            className={`cursor-pointer hover:text-primary transition-colors ${
+              activeView === "teams" ? "text-primary" : ""
+            }`}
+          >
+            RUBRIXS TEAMS
+          </button>
         </div>
         <div className="flex items-center gap-4">
           <span>BATCH: {new Date().toISOString().split('T')[0]}</span>
@@ -79,30 +97,49 @@ export function Home() {
       </div>
 
       {/* Markets Section */}
-      <div>
-        <div className="flex flex-wrap items-center gap-2 md:gap-3 mb-4 md:mb-6">
-          <span className="text-neon-red font-mono text-xs md:text-sm">[02]</span>
-          <h2 className="text-xl md:text-2xl font-display font-semibold text-primary">
-            ACTIVE MARKETS
-          </h2>
-          <div className="flex-1 h-px bg-gradient-to-r from-primary/50 to-transparent hidden md:block"></div>
-          <span className="text-muted-foreground font-mono text-xs hidden md:inline">アクティブマーケット</span>
-        </div>
-        <MarketList status="open" />
-      </div>
+      {activeView === "markets" && (
+        <>
+          {/* Active Markets */}
+          <div>
+            <div className="flex flex-wrap items-center gap-2 md:gap-3 mb-4 md:mb-6">
+              <span className="text-neon-red font-mono text-xs md:text-sm">[02]</span>
+              <h2 className="text-xl md:text-2xl font-display font-semibold text-primary">
+                ACTIVE MARKETS
+              </h2>
+              <div className="flex-1 h-px bg-gradient-to-r from-primary/50 to-transparent hidden md:block"></div>
+              <span className="text-muted-foreground font-mono text-xs hidden md:inline">アクティブマーケット</span>
+            </div>
+            <MarketList status="open" />
+          </div>
+
+          {/* Closed Markets */}
+          <div className="mt-8 md:mt-12">
+            <div className="flex flex-wrap items-center gap-2 md:gap-3 mb-4 md:mb-6">
+              <span className="text-neon-red font-mono text-xs md:text-sm">[03]</span>
+              <h2 className="text-xl md:text-2xl font-display font-semibold text-primary">
+                CLOSED MARKETS
+              </h2>
+              <div className="flex-1 h-px bg-gradient-to-r from-primary/50 to-transparent hidden md:block"></div>
+              <span className="text-muted-foreground font-mono text-xs hidden md:inline">クローズドマーケット</span>
+            </div>
+            <MarketList status="settled" />
+          </div>
+        </>
+      )}
 
       {/* Rubrixs Teams Section */}
-      <div className="mt-8 md:mt-12">
-        <div className="flex flex-wrap items-center gap-2 md:gap-3 mb-4 md:mb-6">
-          <span className="text-neon-red font-mono text-xs md:text-sm">[03]</span>
-          <h2 className="text-xl md:text-2xl font-display font-semibold text-primary">
-            RUBRIXS TEAMS
-          </h2>
-          <div className="flex-1 h-px bg-gradient-to-r from-primary/50 to-transparent hidden md:block"></div>
-          <span className="text-muted-foreground font-mono text-xs hidden md:inline">チームの詳細</span>
-        </div>
+      {activeView === "teams" && (
+        <div>
+          <div className="flex flex-wrap items-center gap-2 md:gap-3 mb-4 md:mb-6">
+            <span className="text-neon-red font-mono text-xs md:text-sm">[04]</span>
+            <h2 className="text-xl md:text-2xl font-display font-semibold text-primary">
+              RUBRIXS TEAMS
+            </h2>
+            <div className="flex-1 h-px bg-gradient-to-r from-primary/50 to-transparent hidden md:block"></div>
+            <span className="text-muted-foreground font-mono text-xs hidden md:inline">チームの詳細</span>
+          </div>
 
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-6">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-6">
           {/* Team 01 */}
           <div className="border border-primary/30 bg-card/50 p-4 md:p-5 hover:border-primary/60 hover:glow-blue transition-all duration-300">
             <div className="flex items-center gap-2 mb-1 pb-2 border-b border-primary/20">
@@ -219,8 +256,9 @@ export function Home() {
               </li>
             </ul>
           </div>
+          </div>
         </div>
-      </div>
+      )}
     </div>
   );
 }
