@@ -6,12 +6,37 @@ import { MarketPage } from "./pages/MarketPage";
 import { DashboardPage } from "./pages/DashboardPage";
 import { AdminPage } from "./pages/AdminPage";
 import { AuthCallback } from "./pages/AuthCallback";
+import Dither from "./components/ui/Dither";
+import Noise from "./components/ui/Noise";
 
 function App() {
   return (
     <Router>
-      <div className="min-h-screen bg-background">
-        <div className="container mx-auto p-6">
+      {/* Noise overlay */}
+      <Noise
+        patternSize={250}
+        patternScaleX={1}
+        patternScaleY={1}
+        patternRefreshInterval={2}
+        patternAlpha={15}
+      />
+
+      {/* Dither background */}
+      <div className="fixed inset-0 z-0 opacity-30">
+        <Dither
+          waveColor={[0.0, 0.4, 0.5]}
+          disableAnimation={false}
+          enableMouseInteraction={true}
+          mouseRadius={0.3}
+          colorNum={4}
+          waveAmplitude={0.3}
+          waveFrequency={3}
+          waveSpeed={0.05}
+        />
+      </div>
+
+      <div className="min-h-screen relative overflow-hidden z-10 flex flex-col">
+        <div className="container mx-auto p-4 md:p-6 relative flex-1">
           <Routes>
             <Route path="/" element={<Home />} />
             <Route path="/markets/:id" element={<MarketPage />} />
@@ -20,6 +45,17 @@ function App() {
             <Route path="/auth/callback" element={<AuthCallback />} />
           </Routes>
         </div>
+
+        {/* Footer */}
+        <footer className="py-6 text-center border-t border-primary/20">
+          <p className="text-sm text-muted-foreground font-mono">
+            made with <span className="text-red-500">❤</span> by{' '}
+            <span className="text-primary">NGM</span> •{' '}
+            <span className="text-primary">GNG</span> •{' '}
+            <span className="text-primary">KRT</span> •{' '}
+            <span className="text-primary">BNG</span>
+          </p>
+        </footer>
       </div>
       <Analytics />
       <Clarity />
