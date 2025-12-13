@@ -1,4 +1,5 @@
 import { useState, useEffect } from "react";
+import { Link } from "react-router-dom";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -14,7 +15,8 @@ import {
   Zap,
   AlertCircle,
   CheckCircle2,
-  Wallet
+  Wallet,
+  BarChart3
 } from "lucide-react";
 
 export function TradePanel({ marketId }) {
@@ -283,6 +285,14 @@ export function TradePanel({ marketId }) {
             💡 Pick the outcome you think will win, enter shares, and click Buy
           </p>
         )}
+
+        {/* Analytics button */}
+        <Link to={`/markets/${marketId}/analytics`} className="block">
+          <Button variant="outline" className="w-full gap-2 mt-2">
+            <BarChart3 className="h-4 w-4" />
+            View Analytics
+          </Button>
+        </Link>
       </CardContent>
     </Card>
   );
