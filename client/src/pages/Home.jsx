@@ -183,7 +183,7 @@ export function Home() {
           <div className="border border-primary/30 bg-card/50 p-4 md:p-5 hover:border-primary/60 hover:glow-blue transition-all duration-300">
             <div className="flex items-center gap-2 mb-1 pb-2 border-b border-primary/20">
               <span className="text-neon-green font-mono text-xs">[05]</span>
-              <h3 className="text-lg font-display text-primary">TEAM SAMMU</h3>
+              <h3 className="text-lg font-display text-primary">TEAM ANYHOW</h3>
             </div>
             <ul className="space-y-1.5 font-mono text-sm">
               <li className="text-foreground/90 flex items-center gap-2">
