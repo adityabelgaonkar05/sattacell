@@ -313,7 +313,7 @@ export function ProbabilityChart({ marketId, outcomes }) {
     }
 
     return (
-        <div className="space-y-3">
+        <div className="space-y-4">
             <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2">
                 <div className="flex items-center gap-2 text-xs sm:text-sm text-muted-foreground">
                     <Clock className="h-3 w-3 sm:h-4 sm:w-4" />
@@ -335,9 +335,9 @@ export function ProbabilityChart({ marketId, outcomes }) {
                 </div>
             </div>
 
-            <div className="border border-primary/20 rounded-lg p-2 sm:p-4 bg-card/50" key={animationKey}>
-                <ResponsiveContainer width="100%" height={200} className="sm:h-[250px]">
-                    <LineChart data={historyData} margin={{ top: 10, right: 10, bottom: 60, left: 10 }}>
+            <div className="border border-primary/20 rounded-lg p-4 bg-card/50" key={animationKey}>
+                <ResponsiveContainer width="100%" height={300}>
+                    <LineChart data={historyData} margin={{ top: 20, right: 30, bottom: 20, left: 10 }}>
                         <CartesianGrid
                             strokeDasharray="3 3"
                             stroke="hsl(187 100% 50% / 0.1)"
@@ -345,46 +345,54 @@ export function ProbabilityChart({ marketId, outcomes }) {
                         />
                         <XAxis
                             dataKey="time"
-                            tick={{ fontSize: 10, fill: 'hsl(200 20% 60%)' }}
+                            tick={{ fontSize: 11, fill: 'hsl(200 20% 60%)' }}
                             tickLine={{ stroke: 'hsl(187 100% 50% / 0.2)' }}
                             axisLine={{ stroke: 'hsl(187 100% 50% / 0.2)' }}
+                            padding={{ left: 10, right: 10 }}
                         />
                         <YAxis
-                            domain={['auto', 'auto']}
-                            tick={{ fontSize: 10, fill: 'hsl(200 20% 60%)' }}
+                            domain={[0, 100]}
+                            tick={{ fontSize: 11, fill: 'hsl(200 20% 60%)' }}
                             tickLine={{ stroke: 'hsl(187 100% 50% / 0.2)' }}
                             axisLine={{ stroke: 'hsl(187 100% 50% / 0.2)' }}
                             tickFormatter={(value) => `${value.toFixed(0)}%`}
-                            padding={{ top: 10, bottom: 10 }}
+                            width={55}
                         />
                         <Tooltip content={<CustomTooltip />} />
-                        <Legend 
-                            verticalAlign="bottom"
-                            align="center"
-                            layout="horizontal"
-                            wrapperStyle={{ 
-                                fontSize: '11px', 
-                                fontFamily: 'monospace',
-                                paddingTop: '15px',
-                                lineHeight: '1.6'
-                            }}
-                            iconSize={8}
-                        />
                         {outcomes.map((outcome, idx) => (
                             <Line
                                 key={outcome}
                                 type="monotone"
                                 dataKey={outcome}
                                 stroke={COLORS[idx % COLORS.length]}
-                                strokeWidth={2}
+                                strokeWidth={2.5}
                                 dot={false}
-                                activeDot={{ r: 4, stroke: COLORS[idx % COLORS.length], strokeWidth: 2 }}
+                                activeDot={{ r: 5, stroke: COLORS[idx % COLORS.length], strokeWidth: 2 }}
                                 className="animated-line"
                                 style={{ animationDelay: `${idx * 300}ms` }}
                             />
                         ))}
                     </LineChart>
                 </ResponsiveContainer>
+                {/* Custom Legend with proper spacing */}
+                <div className="mt-4 pt-4 border-t border-primary/10">
+                    <div className="flex flex-wrap gap-x-5 gap-y-2 justify-center">
+                        {outcomes.map((outcome, idx) => (
+                            <div key={idx} className="flex items-center gap-2">
+                                <div 
+                                    className="w-3 h-3 rounded-sm shrink-0" 
+                                    style={{ backgroundColor: COLORS[idx % COLORS.length] }}
+                                />
+                                <span 
+                                    className="text-xs font-mono whitespace-nowrap"
+                                    style={{ color: COLORS[idx % COLORS.length] }}
+                                >
+                                    {outcome}
+                                </span>
+                            </div>
+                        ))}
+                    </div>
+                </div>
             </div>
         </div>
     );
