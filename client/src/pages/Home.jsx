@@ -86,7 +86,7 @@ export function Home() {
               activeView === "teams" ? "text-primary" : ""
             }`}
           >
-            RUBRIXS TEAMS
+            TEAMS
           </button>
         </div>
         <div className="flex items-center gap-4">
@@ -127,13 +127,13 @@ export function Home() {
         </>
       )}
 
-      {/* Rubrixs Teams Section */}
+      {/* Teams Section */}
       {activeView === "teams" && (
         <div>
           <div className="flex flex-wrap items-center gap-2 md:gap-3 mb-4 md:mb-6">
             <span className="text-neon-red font-mono text-xs md:text-sm">[04]</span>
             <h2 className="text-xl md:text-2xl font-display font-semibold text-primary">
-              RUBRIXS TEAMS
+              TEAMS
             </h2>
             <div className="flex-1 h-px bg-gradient-to-r from-primary/50 to-transparent hidden md:block"></div>
             <span className="text-muted-foreground font-mono text-xs hidden md:inline">チームの詳細</span>
