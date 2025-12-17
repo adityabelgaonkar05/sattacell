@@ -190,10 +190,18 @@ export function ProbabilityChart({ marketId, outcomes }) {
 
     const CustomTooltip = ({ active, payload, label }) => {
         if (!active || !payload?.length) return null;
+
+        // Sort entries by value (probability) descending so highest "market share" is first
+        const sortedPayload = [...payload].sort((a, b) => {
+            const aVal = typeof a.value === "number" ? a.value : 0;
+            const bVal = typeof b.value === "number" ? b.value : 0;
+            return bVal - aVal;
+        });
+
         return (
             <div className="bg-card/95 backdrop-blur-sm border border-primary/30 rounded-lg p-3 shadow-lg">
                 <p className="text-xs text-muted-foreground mb-2 font-mono">{label}</p>
-                {payload.map((entry, index) => (
+                {sortedPayload.map((entry, index) => (
                     <div key={index} className="flex items-center gap-2 text-sm">
                         <div className="w-3 h-3 rounded-sm" style={{ backgroundColor: entry.color }} />
                         <span className="font-mono">{entry.name}:</span>
