@@ -24,15 +24,23 @@ export function MarketDetail({ marketId }) {
   const [showAnalytics, setShowAnalytics] = useState(false);
   const [showChart, setShowChart] = useState(true);
 
-  // Listen for trade completed events to refresh market data (positions)
+  // Keep market data (and leading outcome) in sync with live trading
   useEffect(() => {
     const handleTradeCompleted = () => {
       refetchMarket();
     };
 
+    // Refresh immediately when a trade completes
     window.addEventListener('tradeCompleted', handleTradeCompleted);
+
+    // Poll periodically so leading outcome stays aligned with the probability chart
+    const interval = setInterval(() => {
+      refetchMarket();
+    }, 20000);
+
     return () => {
       window.removeEventListener('tradeCompleted', handleTradeCompleted);
+      clearInterval(interval);
     };
   }, [refetchMarket]);
 

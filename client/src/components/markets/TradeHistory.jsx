@@ -8,14 +8,20 @@ export function TradeHistory({ marketId, outcomes }) {
 
   useEffect(() => {
     fetchHistory();
-    
-    // Listen for trade completed events to refresh history
+
+    // Keep history in sync with the probability chart:
+    // - Poll periodically, just like the chart
+    // - Refresh immediately when a trade completes
+    const interval = setInterval(fetchHistory, 20000);
+
     const handleTradeCompleted = () => {
       fetchHistory();
     };
-    
+
     window.addEventListener('tradeCompleted', handleTradeCompleted);
+
     return () => {
+      clearInterval(interval);
       window.removeEventListener('tradeCompleted', handleTradeCompleted);
     };
   }, [marketId]);
