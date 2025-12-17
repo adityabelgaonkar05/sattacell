@@ -10,6 +10,10 @@ export function FloatingHistoryButton({ marketId }) {
   const [dragStart, setDragStart] = useState({ offsetX: 0, offsetY: 0 });
   const [hasMoved, setHasMoved] = useState(false);
   const buttonRef = useRef(null);
+  const [panelPosition, setPanelPosition] = useState(null);
+  const [isPanelDragging, setIsPanelDragging] = useState(false);
+  const [panelDragStart, setPanelDragStart] = useState({ offsetX: 0, offsetY: 0 });
+  const panelRef = useRef(null);
 
   // Restore last position for this page from localStorage
   useEffect(() => {
@@ -93,6 +97,54 @@ export function FloatingHistoryButton({ marketId }) {
     setIsOpen((prev) => !prev);
   };
 
+  // Draggability for the "live trade history" panel
+  useEffect(() => {
+    const handleMouseMove = (e) => {
+      if (!isPanelDragging || !panelRef.current) return;
+
+      e.preventDefault();
+
+      const rect = panelRef.current.getBoundingClientRect();
+      const width = rect.width;
+      const height = rect.height;
+
+      let newX = e.clientX - panelDragStart.offsetX;
+      let newY = e.clientY - panelDragStart.offsetY;
+
+      const maxX = window.innerWidth - width - 8;
+      const maxY = window.innerHeight - height - 8;
+
+      newX = Math.min(Math.max(8, newX), maxX);
+      newY = Math.min(Math.max(64, newY), maxY);
+
+      setPanelPosition({ x: newX, y: newY });
+    };
+
+    const handleMouseUp = () => {
+      setIsPanelDragging(false);
+    };
+
+    if (isPanelDragging) {
+      window.addEventListener("mousemove", handleMouseMove);
+      window.addEventListener("mouseup", handleMouseUp);
+    }
+
+    return () => {
+      window.removeEventListener("mousemove", handleMouseMove);
+      window.removeEventListener("mouseup", handleMouseUp);
+    };
+  }, [isPanelDragging, panelDragStart]);
+
+  const handlePanelMouseDown = (e) => {
+    if (!panelRef.current) return;
+    const rect = panelRef.current.getBoundingClientRect();
+    setPanelDragStart({
+      offsetX: e.clientX - rect.left,
+      offsetY: e.clientY - rect.top,
+    });
+    setIsPanelDragging(true);
+  };
+
   return (
     <>
       <button
@@ -112,15 +164,27 @@ export function FloatingHistoryButton({ marketId }) {
 
       {isOpen && (
         <div className="fixed inset-0 z-40 pointer-events-none">
-          <div className="absolute right-4 bottom-20 w-full max-w-md pointer-events-auto">
+          <div
+            ref={panelRef}
+            className="absolute w-full max-w-md pointer-events-auto"
+            style={
+              panelPosition
+                ? { left: panelPosition.x, top: panelPosition.y }
+                : { right: 16, bottom: 80 }
+            }
+          >
             <div className="border border-primary/40 rounded-xl bg-card/95 backdrop-blur-md shadow-2xl overflow-hidden">
-              <div className="flex items-center justify-between px-3 py-2 border-b border-primary/20 bg-background/80">
+              <div
+                className="flex items-center justify-between px-3 py-2 border-b border-primary/20 bg-background/80 cursor-move"
+                onMouseDown={handlePanelMouseDown}
+              >
                 <span className="text-xs font-mono text-muted-foreground">
                   live trade history
                 </span>
                 <button
                   type="button"
                   onClick={() => setIsOpen(false)}
+                  onMouseDown={(e) => e.stopPropagation()}
                   className="inline-flex h-6 w-6 items-center justify-center rounded-md hover:bg-primary/10 text-muted-foreground hover:text-primary transition-colors"
                   aria-label="Close history"
                 >
